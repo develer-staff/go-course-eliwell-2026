@@ -1,0 +1,51 @@
+# M2: the hub
+
+## A message goes to everybody else
+alice < * Welcome guest1!
+bob < * Welcome guest2!
+alice < * guest2 joined
+carol < * Welcome guest3!
+alice < * guest3 joined
+bob < * guest3 joined
+alice > hello everybody
+bob < guest1: hello everybody
+carol < guest1: hello everybody
+alice hears nothing
+
+## Everybody is told when somebody leaves
+alice < * Welcome guest1!
+bob < * Welcome guest2!
+alice < * guest2 joined
+bob > /quit
+bob < * bye
+alice < * guest2 left
+carol < * Welcome guest3!
+alice < * guest3 joined
+carol hangs up
+alice < * guest3 left
+
+## Messages arrive in the order they were sent
+alice < * Welcome guest1!
+bob < * Welcome guest2!
+alice > one
+alice > two
+alice > three
+bob < guest1: one
+bob < guest1: two
+bob < guest1: three
+
+## Empty lines are ignored
+alice < * Welcome guest1!
+bob < * Welcome guest2!
+alice >
+alice >
+alice > hi
+bob < guest1: hi
+
+## Commands are not messages
+alice < * Welcome guest1!
+bob < * Welcome guest2!
+alice < * guest2 joined
+bob > /ping
+bob < pong
+alice hears nothing

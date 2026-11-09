@@ -1,0 +1,32 @@
+# M4: /msg NAME TEXT
+
+## /msg sends a line to one client only
+alice < * Welcome guest1!
+bob < * Welcome guest2!
+carol < * Welcome guest3!
+alice < * guest2 joined
+alice < * guest3 joined
+bob < * guest3 joined
+alice > /msg guest2 see you at noon
+bob < [private] guest1: see you at noon
+carol hears nothing
+alice hears nothing
+
+## It works with nicknames
+alice < * Welcome guest1!
+bob < * Welcome guest2!
+alice < * guest2 joined
+bob > /nick bob
+bob < * guest2 is now known as bob
+alice < * guest2 is now known as bob
+alice > /msg bob psst
+bob < [private] guest1: psst
+
+## Mistakes
+alice < * Welcome guest1!
+alice > /msg zed hello
+alice < ! no such user: zed
+alice > /msg guest1
+alice < ! usage: /msg NAME TEXT
+alice > /msg
+alice < ! usage: /msg NAME TEXT

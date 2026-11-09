@@ -1,0 +1,3 @@
+# M6: a client that doesn't read is disconnected, and doesn't block the others.
+# Checked by TestM6_SlowClient. By hand: nc, then Ctrl+Z to freeze it; `yes hi | nc localhost 4000` in another terminal.
+

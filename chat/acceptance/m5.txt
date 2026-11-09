@@ -1,0 +1,32 @@
+# M5: Ctrl+C (skipped on Windows)
+
+## Ctrl+C tells everybody, then stops
+alice < * Welcome guest1!
+bob < * Welcome guest2!
+alice < * guest2 joined
+press Ctrl+C
+alice < * server is shutting down
+alice is disconnected
+bob < * server is shutting down
+bob is disconnected
+server exits
+
+## Ctrl+C with nobody connected
+press Ctrl+C
+server exits
+
+## Ctrl+C after people came and went
+carol < * Welcome guest1!
+alice < * Welcome guest2!
+carol < * guest2 joined
+alice > /quit
+alice < * bye
+carol < * guest2 left
+bob < * Welcome guest3!
+carol < * guest3 joined
+bob hangs up
+carol < * guest3 left
+press Ctrl+C
+carol < * server is shutting down
+carol is disconnected
+server exits

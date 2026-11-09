@@ -1,0 +1,60 @@
+# M3: /who and /nick
+
+## /who lists who is connected, in alphabetical order
+alice < * Welcome guest1!
+bob < * Welcome guest2!
+alice < * guest2 joined
+alice > /who
+alice < * online: guest1, guest2
+
+## /who forgets the clients that left
+alice < * Welcome guest1!
+bob < * Welcome guest2!
+alice < * guest2 joined
+bob hangs up
+alice < * guest2 left
+alice > /who
+alice < * online: guest1
+
+## /nick changes your name, and everybody is told, you included
+alice < * Welcome guest1!
+bob < * Welcome guest2!
+alice < * guest2 joined
+alice > /nick alice
+alice < * guest1 is now known as alice
+bob < * guest1 is now known as alice
+alice > hi
+bob < alice: hi
+bob > /who
+bob < * online: alice, guest2
+
+## A nickname is 1 to 16 letters, digits, - or _, and must be free
+alice < * Welcome guest1!
+bob < * Welcome guest2!
+alice < * guest2 joined
+alice > /nick alice
+alice < * guest1 is now known as alice
+bob < * guest1 is now known as alice
+bob > /nick alice
+bob < ! nickname taken: alice
+bob > /nick b@d
+bob < ! invalid nickname: b@d
+bob > /nick two words
+bob < ! invalid nickname: two words
+bob > /nick waytoolongnickname
+bob < ! invalid nickname: waytoolongnickname
+bob > still guest2
+alice < guest2: still guest2
+
+## The name is free again when its owner leaves
+alice < * Welcome guest1!
+bob < * Welcome guest2!
+alice < * guest2 joined
+alice > /nick alice
+alice < * guest1 is now known as alice
+bob < * guest1 is now known as alice
+alice > /quit
+alice < * bye
+bob < * alice left
+bob > /nick alice
+bob < * guest2 is now known as alice

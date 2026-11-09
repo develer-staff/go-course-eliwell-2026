@@ -1,0 +1,33 @@
+# M1: connections
+# alice > X: alice sends X.  alice < X: the next line alice receives is X.
+# alice, bob, carol are named guest1, guest2, guest3 by the server, in connection order.
+# Each ## is a new server.
+
+## Each client gets a name, in the order they connect
+alice < * Welcome guest1!
+bob < * Welcome guest2!
+carol < * Welcome guest3!
+
+## /ping answers pong
+alice < * Welcome guest1!
+alice > /ping
+alice < pong
+alice > /ping
+alice < pong
+
+## /quit says bye and disconnects
+alice < * Welcome guest1!
+alice > /quit
+alice < * bye
+alice is disconnected
+
+## Unknown commands
+alice < * Welcome guest1!
+alice > /dance with me
+alice < ! unknown command: /dance
+
+## A client that says nothing doesn't block the others
+alice < * Welcome guest1!
+bob < * Welcome guest2!
+bob > /ping
+bob < pong
