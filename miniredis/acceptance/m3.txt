@@ -1,0 +1,79 @@
+# M3: lists. LRANGE indexes can be negative: -1 is the last element.
+
+## RPUSH adds at the end, LPOP takes from the start
+alice > RPUSH todo milk eggs
+alice < (integer) 2
+alice > RPUSH todo bread
+alice < (integer) 3
+alice > LLEN todo
+alice < (integer) 3
+alice > LPOP todo
+alice < "milk"
+alice > LPOP todo
+alice < "eggs"
+alice > LLEN todo
+alice < (integer) 1
+
+## LRANGE
+alice > RPUSH l a b c d
+alice < (integer) 4
+alice > LRANGE l 0 -1
+alice < 1) "a"
+alice < 2) "b"
+alice < 3) "c"
+alice < 4) "d"
+alice > LRANGE l 1 2
+alice < 1) "b"
+alice < 2) "c"
+alice > LRANGE l -2 -1
+alice < 1) "c"
+alice < 2) "d"
+alice > LRANGE l 2 100
+alice < 1) "c"
+alice < 2) "d"
+alice > LRANGE l 3 1
+alice < (empty array)
+alice > LRANGE l one two
+alice < (error) ERR value is not an integer or out of range
+
+## A list that doesn't exist is empty
+alice > LLEN nope
+alice < (integer) 0
+alice > LPOP nope
+alice < (nil)
+alice > LRANGE nope 0 -1
+alice < (empty array)
+
+## A list that becomes empty doesn't exist any more
+alice > RPUSH l x
+alice < (integer) 1
+alice > LPOP l
+alice < "x"
+alice > DBSIZE
+alice < (integer) 0
+
+## A key holds one kind of value
+alice > SET s hello
+alice < OK
+alice > RPUSH s a
+alice < (error) WRONGTYPE Operation against a key holding the wrong kind of value
+alice > RPUSH l a
+alice < (integer) 1
+alice > GET l
+alice < (error) WRONGTYPE Operation against a key holding the wrong kind of value
+alice > INCR l
+alice < (error) WRONGTYPE Operation against a key holding the wrong kind of value
+alice > LPOP s
+alice < (error) WRONGTYPE Operation against a key holding the wrong kind of value
+
+## SET replaces any kind of value, DEL removes any kind
+alice > RPUSH l a
+alice < (integer) 1
+alice > SET l now-a-string
+alice < OK
+alice > GET l
+alice < "now-a-string"
+alice > RPUSH m a
+alice < (integer) 1
+alice > DEL m
+alice < (integer) 1

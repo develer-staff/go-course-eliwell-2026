@@ -1,0 +1,48 @@
+# M4: hashes. HGETALL is sorted by field.
+
+## HSET and HGET
+alice > HSET user:1 name ada
+alice < (integer) 1
+alice > HSET user:1 lang go
+alice < (integer) 1
+alice > HGET user:1 name
+alice < "ada"
+alice > HGET user:1 age
+alice < (nil)
+alice > HGET user:2 name
+alice < (nil)
+
+## HSET says 1 for a new field, 0 for a field that changed
+alice > HSET user:1 name ada
+alice < (integer) 1
+alice > HSET user:1 name grace
+alice < (integer) 0
+alice > HGET user:1 name
+alice < "grace"
+
+## HGETALL
+alice > HSET user:1 name grace
+alice < (integer) 1
+alice > HSET user:1 lang go
+alice < (integer) 1
+alice > HGETALL user:1
+alice < 1) "lang"
+alice < 2) "go"
+alice < 3) "name"
+alice < 4) "grace"
+alice > HGETALL nope
+alice < (empty array)
+
+## A key holds one kind of value
+alice > HSET h f v
+alice < (integer) 1
+alice > GET h
+alice < (error) WRONGTYPE Operation against a key holding the wrong kind of value
+alice > LLEN h
+alice < (error) WRONGTYPE Operation against a key holding the wrong kind of value
+alice > SET s x
+alice < OK
+alice > HSET s f v
+alice < (error) WRONGTYPE Operation against a key holding the wrong kind of value
+alice > HGET s f
+alice < (error) WRONGTYPE Operation against a key holding the wrong kind of value

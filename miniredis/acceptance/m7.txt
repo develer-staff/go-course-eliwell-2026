@@ -1,0 +1,49 @@
+# M7: BLPOP key seconds (0 = forever)
+
+## If the list has elements, BLPOP doesn't wait
+alice > RPUSH jobs first second
+alice < (integer) 2
+alice > BLPOP jobs 1
+alice < 1) "jobs"
+alice < 2) "first"
+
+## BLPOP waits until another client pushes
+alice > BLPOP jobs 5
+alice hears nothing
+bob > RPUSH jobs hello
+bob < (integer) 1
+alice < 1) "jobs"
+alice < 2) "hello"
+bob > LLEN jobs
+bob < (integer) 0
+
+## BLPOP gives up at the timeout
+alice > BLPOP jobs 1
+alice < (nil)
+
+## A waiting client doesn't stop the others
+alice > BLPOP jobs 0
+bob > SET a 1
+bob < OK
+bob > GET a
+bob < "1"
+alice hears nothing
+
+## BLPOP waits for its own list only
+alice > BLPOP jobs 2
+bob > RPUSH other x
+bob < (integer) 1
+alice hears nothing
+bob > RPUSH jobs y
+bob < (integer) 1
+alice < 1) "jobs"
+alice < 2) "y"
+bob > LLEN other
+bob < (integer) 1
+
+## Ctrl+C doesn't wait for the waiting clients
+alice > BLPOP jobs 0
+alice hears nothing
+press Ctrl+C
+alice is disconnected
+server exits

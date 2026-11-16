@@ -1,0 +1,50 @@
+# M2: INCR, KEYS, DBSIZE
+
+## INCR adds 1 to a number, starting from 0
+alice > INCR visits
+alice < (integer) 1
+alice > INCR visits
+alice < (integer) 2
+alice > GET visits
+alice < "2"
+alice > SET n 41
+alice < OK
+alice > INCR n
+alice < (integer) 42
+
+## INCR on something that is not a number
+alice > SET name bob
+alice < OK
+alice > INCR name
+alice < (error) ERR value is not an integer or out of range
+alice > GET name
+alice < "bob"
+
+## KEYS finds the keys that match a pattern, sorted
+alice > SET user:2 bob
+alice < OK
+alice > SET user:1 alice
+alice < OK
+alice > SET order:7 pizza
+alice < OK
+alice > KEYS user:*
+alice < 1) "user:1"
+alice < 2) "user:2"
+alice > KEYS *
+alice < 1) "order:7"
+alice < 2) "user:1"
+alice < 3) "user:2"
+alice > KEYS nothing*
+alice < (empty array)
+
+## DBSIZE says how many keys there are
+alice > DBSIZE
+alice < (integer) 0
+alice > SET a 1
+alice < OK
+alice > SET b 2
+alice < OK
+alice > SET a 3
+alice < OK
+alice > DBSIZE
+alice < (integer) 2

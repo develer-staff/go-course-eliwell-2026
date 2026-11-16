@@ -1,0 +1,67 @@
+# M1: strings
+# alice > X: alice sends X.  alice < X: the next line alice receives is X.
+# Each ## is a new server.
+
+## PING
+alice > PING
+alice < PONG
+alice > PING hello
+alice < "hello"
+
+## SET and GET
+alice > GET greeting
+alice < (nil)
+alice > SET greeting hello
+alice < OK
+alice > GET greeting
+alice < "hello"
+alice > SET greeting bye
+alice < OK
+alice > GET greeting
+alice < "bye"
+
+## DEL removes keys, and says how many existed
+alice > SET a 1
+alice < OK
+alice > SET b 2
+alice < OK
+alice > DEL a b c
+alice < (integer) 2
+alice > GET a
+alice < (nil)
+
+## Command names can be in any case, but keys can't
+alice > set Greeting hi
+alice < OK
+alice > Get Greeting
+alice < "hi"
+alice > GET greeting
+alice < (nil)
+
+## Every client sees the same data
+alice > SET shared yes
+alice < OK
+bob > GET shared
+bob < "yes"
+
+## QUIT
+alice > QUIT
+alice < OK
+alice is disconnected
+
+## Empty lines are ignored
+alice >
+alice > PING
+alice < PONG
+
+## Mistakes
+alice > FOO bar
+alice < (error) ERR unknown command 'FOO'
+alice > GET
+alice < (error) ERR wrong number of arguments for 'get' command
+alice > SET a
+alice < (error) ERR wrong number of arguments for 'set' command
+alice > PING a b
+alice < (error) ERR wrong number of arguments for 'ping' command
+alice > PING
+alice < PONG

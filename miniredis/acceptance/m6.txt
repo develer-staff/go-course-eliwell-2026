@@ -1,0 +1,15 @@
+# M6: Ctrl+C (skipped on Windows)
+
+## Ctrl+C disconnects everybody, then stops
+alice > SET a 1
+alice < OK
+bob > GET a
+bob < "1"
+press Ctrl+C
+alice is disconnected
+bob is disconnected
+server exits
+
+## Ctrl+C with nobody connected
+press Ctrl+C
+server exits

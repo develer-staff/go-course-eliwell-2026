@@ -1,0 +1,64 @@
+# M5: expiry. TTL: -1 no expiry, -2 no such key.
+
+## EXPIRE and TTL
+alice > SET session abc
+alice < OK
+alice > TTL session
+alice < (integer) -1
+alice > EXPIRE session 100
+alice < (integer) 1
+alice > TTL session
+alice < (integer) 100
+alice > TTL nope
+alice < (integer) -2
+alice > EXPIRE nope 100
+alice < (integer) 0
+alice > EXPIRE session soon
+alice < (error) ERR value is not an integer or out of range
+
+## The key disappears
+alice > SET session abc
+alice < OK
+alice > EXPIRE session 1
+alice < (integer) 1
+alice > GET session
+alice < "abc"
+wait 1100ms
+alice > GET session
+alice < (nil)
+alice > TTL session
+alice < (integer) -2
+
+## Any kind of key can expire
+alice > RPUSH l a b
+alice < (integer) 2
+alice > EXPIRE l 1
+alice < (integer) 1
+wait 1100ms
+alice > LLEN l
+alice < (integer) 0
+alice > KEYS *
+alice < (empty array)
+
+## SET starts again without an expiry
+alice > SET session abc
+alice < OK
+alice > EXPIRE session 1
+alice < (integer) 1
+alice > SET session def
+alice < OK
+wait 1100ms
+alice > GET session
+alice < "def"
+
+## Expired keys are removed even if nobody asks for them
+# DBSIZE counts expired keys until they are removed.
+alice > SET a 1
+alice < OK
+alice > SET b 2
+alice < OK
+alice > EXPIRE a 1
+alice < (integer) 1
+wait 1500ms
+alice > DBSIZE
+alice < (integer) 1
