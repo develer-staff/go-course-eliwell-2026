@@ -1,0 +1,3 @@
+2024-02-29T23:59:58Z INFO gateway nightly backup started
+2024-02-29T23:59:59Z ERROR gateway timeout talking to storage
+2024-03-01T00:00:00Z INFO gateway nightly backup done

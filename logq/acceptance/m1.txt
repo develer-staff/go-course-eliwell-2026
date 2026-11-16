@@ -1,0 +1,23 @@
+# M1: logq WORD FILE
+# Each block: a command, then its exact output. [exit 1] = exit code 1, otherwise 0.
+
+$ logq timeout testdata/app.log
+2024-03-01T08:00:04Z ERROR payments timeout calling bank gateway
+2024-03-01T08:00:26Z DEBUG payments retry scheduled after timeout
+
+$ logq Timeout testdata/app.log
+2024-03-01T08:00:12Z ERROR auth Timeout waiting for upstream
+2024-03-01T08:00:18Z WARN auth Timeout approaching for session s-81
+
+$ logq log testdata/app.log
+2024-03-01T08:00:01Z INFO auth alice logged in
+--- logrotate: rotated at line 7 ---
+2024-03-01T08:00:25Z INFO auth bob logged in
+
+$ logq elephant testdata/app.log
+
+$ logq timeout testdata/missing.log
+[exit 1]
+
+$ logq
+[exit 1]

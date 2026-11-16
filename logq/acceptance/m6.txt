@@ -1,0 +1,15 @@
+# M6: .gz files (testdata/archive.log.gz is testdata/old.log, gzipped)
+
+$ logq timeout testdata/archive.log.gz
+2024-02-29T23:59:59Z ERROR gateway timeout talking to storage
+
+$ logq -json backup testdata/archive.log.gz
+{"file":"testdata/archive.log.gz","line":1,"time":"2024-02-29T23:59:58Z","level":"INFO","service":"gateway","message":"nightly backup started"}
+{"file":"testdata/archive.log.gz","line":3,"time":"2024-03-01T00:00:00Z","level":"INFO","service":"gateway","message":"nightly backup done"}
+
+$ logq -count '' testdata/app.log testdata/archive.log.gz
+15
+
+$ logq -level error '' testdata/old.log testdata/archive.log.gz
+2024-02-29T23:59:59Z ERROR gateway timeout talking to storage
+2024-02-29T23:59:59Z ERROR gateway timeout talking to storage

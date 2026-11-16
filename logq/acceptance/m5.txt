@@ -1,0 +1,24 @@
+# M5: -stats. Sorted by count, then by name. Format: "  %-10s %d\n"
+
+$ logq -stats '' testdata/app.log
+levels:
+  INFO       4
+  ERROR      3
+  DEBUG      2
+  WARN       2
+  UNKNOWN    1
+services:
+  auth       4
+  payments   4
+  search     3
+  -          1
+
+$ logq -stats -i timeout testdata/app.log testdata/old.log
+levels:
+  ERROR      3
+  DEBUG      1
+  WARN       1
+services:
+  auth       2
+  payments   2
+  gateway    1

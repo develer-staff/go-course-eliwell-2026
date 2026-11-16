@@ -1,0 +1,40 @@
+# M3: -level, -service, -i. A log line is: TIME LEVEL SERVICE MESSAGE...
+
+$ logq -level error '' testdata/app.log
+2024-03-01T08:00:04Z ERROR payments timeout calling bank gateway
+2024-03-01T08:00:12Z ERROR auth Timeout waiting for upstream
+2024-03-01T08:00:21Z ERROR search connection refused to db-2
+
+$ logq -level warn '' testdata/app.log
+2024-03-01T08:00:03Z WARN payments slow query took 734ms
+2024-03-01T08:00:04Z ERROR payments timeout calling bank gateway
+2024-03-01T08:00:12Z ERROR auth Timeout waiting for upstream
+2024-03-01T08:00:18Z WARN auth Timeout approaching for session s-81
+2024-03-01T08:00:21Z ERROR search connection refused to db-2
+
+$ logq -level ERROR '' testdata/old.log
+2024-02-29T23:59:59Z ERROR gateway timeout talking to storage
+
+$ logq -service auth '' testdata/app.log
+2024-03-01T08:00:01Z INFO auth alice logged in
+2024-03-01T08:00:12Z ERROR auth Timeout waiting for upstream
+2024-03-01T08:00:18Z WARN auth Timeout approaching for session s-81
+2024-03-01T08:00:25Z INFO auth bob logged in
+
+$ logq -i timeout testdata/app.log
+2024-03-01T08:00:04Z ERROR payments timeout calling bank gateway
+2024-03-01T08:00:12Z ERROR auth Timeout waiting for upstream
+2024-03-01T08:00:18Z WARN auth Timeout approaching for session s-81
+2024-03-01T08:00:26Z DEBUG payments retry scheduled after timeout
+
+$ logq -i -level warn -service auth timeout testdata/app.log
+2024-03-01T08:00:12Z ERROR auth Timeout waiting for upstream
+2024-03-01T08:00:18Z WARN auth Timeout approaching for session s-81
+
+$ logq rotate testdata/app.log
+--- logrotate: rotated at line 7 ---
+
+$ logq -level debug rotate testdata/app.log
+
+$ logq -level loud '' testdata/app.log
+[exit 1]

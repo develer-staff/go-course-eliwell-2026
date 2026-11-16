@@ -1,0 +1,22 @@
+# M4: -count, -json
+
+$ logq -count timeout testdata/app.log
+2
+
+$ logq -count -level warn '' testdata/app.log testdata/old.log
+6
+
+$ logq -count elephant testdata/app.log
+0
+
+$ logq -json -service search '' testdata/app.log
+{"file":"testdata/app.log","line":4,"time":"2024-03-01T08:00:07Z","level":"DEBUG","service":"search","message":"cache miss for key=user:42"}
+{"file":"testdata/app.log","line":5,"time":"2024-03-01T08:00:09Z","level":"INFO","service":"search","message":"request completed status=200"}
+{"file":"testdata/app.log","line":10,"time":"2024-03-01T08:00:21Z","level":"ERROR","service":"search","message":"connection refused to db-2"}
+
+$ logq -json -level error '' < testdata/old.log
+{"file":"-","line":2,"time":"2024-02-29T23:59:59Z","level":"ERROR","service":"gateway","message":"timeout talking to storage"}
+
+# Not a log line: no time, no service.
+$ logq -json rotate testdata/app.log
+{"file":"testdata/app.log","line":7,"level":"UNKNOWN","message":"--- logrotate: rotated at line 7 ---"}

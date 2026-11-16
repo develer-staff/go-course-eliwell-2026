@@ -1,0 +1,12 @@
+2024-03-01T08:00:01Z INFO auth alice logged in
+2024-03-01T08:00:03Z WARN payments slow query took 734ms
+2024-03-01T08:00:04Z ERROR payments timeout calling bank gateway
+2024-03-01T08:00:07Z DEBUG search cache miss for key=user:42
+2024-03-01T08:00:09Z INFO search request completed status=200
+2024-03-01T08:00:12Z ERROR auth Timeout waiting for upstream
+--- logrotate: rotated at line 7 ---
+2024-03-01T08:00:15Z INFO payments payment accepted amount=12.50
+2024-03-01T08:00:18Z WARN auth Timeout approaching for session s-81
+2024-03-01T08:00:21Z ERROR search connection refused to db-2
+2024-03-01T08:00:25Z INFO auth bob logged in
+2024-03-01T08:00:26Z DEBUG payments retry scheduled after timeout
